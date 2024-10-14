@@ -24,6 +24,8 @@ argocd_application.argocd: Creating...
 ╵
 ```
 
+maybe it actually makes sense to just do a helm release, output some info to a shared store, and then in the argocd app of apps repo, pull the appropriate data, like namespace, bring argocd under its own management in the application layer of cluster management and deployment... end nightly note
+
 ## Usage
 
 ```bash
