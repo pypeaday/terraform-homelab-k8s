@@ -36,8 +36,7 @@ terraform {
   }
 }
 
-provider "kind" {
-}
+provider "kind" {}
 
 resource "kind_cluster" "foo" {
   wait_for_ready = false
@@ -68,7 +67,6 @@ provider "helm" {
 }
 
 # for initial release in the cluster
-# TODO: using their helm chart and repo and then the argocd app switches to mine from git... I need to get a helm repo setup somewhere
 resource "helm_release" "argocd" {
 
   depends_on = [kind_cluster.foo]
@@ -76,11 +74,17 @@ resource "helm_release" "argocd" {
   chart      = "argo-cd"
   name       = local.argocd_deployment_name
   repository = "https://argoproj.github.io/argo-helm"
+  version    = "7.0.0"
 
   namespace        = local.argocd_namespace
   create_namespace = true
 
   values = [yamlencode(local.argocd_helm_values)]
+
+  # set {
+  #   name  = "server.service.type"
+  #   value = "LoadBalancer"
+  # }
 
   lifecycle {
     ignore_changes = all
@@ -90,72 +94,72 @@ resource "helm_release" "argocd" {
 
 data "kubernetes_secret" "argocd_admin" {
 
-  depends_on = [helm_release.argocd]
-
   metadata {
     name      = "argocd-initial-admin-secret"
-    namespace = local.argocd_namespace
+    namespace = helm_release.argocd.namespace
   }
 
 }
 
-provider "argocd" {
+# provider "argocd" {
 
-  password = data.kubernetes_secret.argocd_admin.data["password"]
-  username = "admin"
+#   password = data.kubernetes_secret.argocd_admin.data["password"]
+#   username = "admin"
 
-  # core = true
+#   # core = true
 
-  # auth_token                  = data.kubernetes_secret.argocd_admin.data["password"]
-  port_forward_with_namespace = "${local.argocd_namespace}:8080:8080"
-  kubernetes {
-    config_context = local.kubernetes_context
-  }
+#   # auth_token                  = data.kubernetes_secret.argocd_admin.data["password"]
+#   port_forward_with_namespace = local.argocd_namespace
+#   kubernetes {
+#     config_context = local.kubernetes_context
+#   }
 
-}
+# }
 
-resource "argocd_application" "argocd" {
+# TODO: having problems using terraform to make the argocd app - but for homelab
+# I think I'll just use terraform to make a cluster with argocd and then use
+# helm charts and a repo for argocd apps
+# resource "argocd_application" "argocd" {
 
-  depends_on = [helm_release.argocd]
-  # depends_on = [kind_cluster.foo]
+#   # depends_on = [kind_cluster.foo]
 
-  metadata {
-    name      = local.argocd_deployment_name
-    namespace = local.argocd_namespace
-    labels = {
-      test = "true"
-    }
-  }
+#   metadata {
+#     name      = helm_release.argocd.name
+#     namespace = helm_release.argocd.namespace
+#     labels = {
+#       test = "true"
+#     }
+#   }
 
-  spec {
-    destination {
-      server    = "https://kubernetes.default.svc"
-      namespace = local.argocd_namespace
-    }
+#   spec {
+#     destination {
+#       server    = "https://kubernetes.default.svc"
+#       namespace = local.argocd_namespace
+#     }
 
-    source {
-      # repo_url = "TODO: build charts and upload somewhere"
-      # repo_url = "https://github.com/pypeaday/helm-charts.git"
-      # path            = "argocd"
-      # target_revision = "HEAD"
+#     source {
+#       # repo_url = "TODO: build charts and upload somewhere"
+#       # repo_url = "https://github.com/pypeaday/helm-charts.git"
+#       # path            = "argocd"
+#       # target_revision = "HEAD"
 
-      repo_url        = "https://argoproj.github.io/argo-helm"
-      chart           = "argo-cd"
-      target_revision = "7.0.0"
+#       repo_url        = "https://argoproj.github.io/argo-helm"
+#       chart           = "argo-cd"
+#       target_revision = "7.0.0"
 
-      helm {
-        # release_name = local.argocd_deployment_name
-        # parameter {
-        #   name  = "image.tag"
-        #   value = "1.2.3"
-        # }
-        # parameter {
-        #   name  = "someotherparameter"
-        #   value = "true"
-        # }
-        # value_files = ["values-test.yml"]
-        values = yamlencode(local.argocd_helm_values)
-      }
-    }
-  }
-}
+#       helm {
+#         # release_name = local.argocd_deployment_name
+#         # parameter {
+#         #   name  = "image.tag"
+#         #   value = "1.2.3"
+#         # }
+#         # parameter {
+#         #   name  = "someotherparameter"
+#         #   value = "true"
+#         # }
+#         # value_files = ["values-test.yml"]
+#         values = yamlencode(local.argocd_helm_values)
+#       }
+#     }
+#   }
+# }

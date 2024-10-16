@@ -4,27 +4,24 @@ Terraform repo to setup a local k8s cluster to homelab with
 
 K8s provider: `kind`
 
-TODO: Will Include `ArgoCD`!
+Includes ArgoCD as a helm release managed with terraform
+
 
 # Bugs
 
-Currently can't get the ArgoCD terraform provider to sucessfully bring the helm release of ArgoCD into its own management. The error feels networky but the setup is so simple that I don't know where it's going wrong.
+ I don't actually need this `data` resource, but I've not been able to use terraform to create `argocd_application`s meaning I haven't been able to configure the terraform provider appropriately. I'm not planning on using terraform to create argocd applications yet, will try to stick with manifests in homelab-argocd repo, but I need to understand this network issue nonetheless
 
 ```
-argocd_application.argocd: Creating...
+data.kubernetes_secret.argocd_admin: Reading...
 ╷
-│ Error: failed to create new API client
+│ Error: Get "http://localhost/api/v1/namespaces/argocd/secrets/argocd-initial-admin-secret": dial tcp [::1]:80: connect: connection refused
 │ 
-│   with argocd_application.argocd,
-│   on main.tf line 117, in resource "argocd_application" "argocd":
-│  117: resource "argocd_application" "argocd" {
+│   with data.kubernetes_secret.argocd_admin,
+│   on main.tf line 95, in data "kubernetes_secret" "argocd_admin":
+│   95: data "kubernetes_secret" "argocd_admin" {
 │ 
-│ cannot find pod with selector: [app.kubernetes.io/name=argocd-server] - use the --{component}-name flag in this command or set the environmental variable (Refer to
-│ https://argo-cd.readthedocs.io/en/stable/user-guide/environment-variables), to change the Argo CD component name in the CLI
 ╵
 ```
-
-maybe it actually makes sense to just do a helm release, output some info to a shared store, and then in the argocd app of apps repo, pull the appropriate data, like namespace, bring argocd under its own management in the application layer of cluster management and deployment... end nightly note
 
 ## Usage
 
