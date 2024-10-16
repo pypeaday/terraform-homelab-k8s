@@ -6,6 +6,8 @@ K8s provider: `kind`
 
 Includes ArgoCD as a helm release managed with terraform
 
+Head over to my [homelab-argocd](https://www.github.com/pypeaday/homelab-argocd) repo to see  my app of apps deployment!
+
 
 # Bugs
 
