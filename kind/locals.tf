@@ -1,8 +1,9 @@
 locals {
   kubernetes_context = "kind-${var.cluster_name}"
   traefik_helm_values = {
-    serfice = {
-      type = "NodePort"
+    service = {
+      # type = "NodePort"
+      externalIPs = var.traefik_external_ips
     }
     ports = {
       web = {
