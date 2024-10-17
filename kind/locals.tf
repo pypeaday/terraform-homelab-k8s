@@ -1,8 +1,5 @@
 locals {
-  argocd_deployment_name = "argocd"
-  argocd_namespace       = "argocd"
-  cluster_name           = "foo-tf"
-  kubernetes_context     = "kind-${local.cluster_name}"
+  kubernetes_context = "kind-${var.cluster_name}"
   traefik_helm_values = {
     serfice = {
       type = "NodePort"
