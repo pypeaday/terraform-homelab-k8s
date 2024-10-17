@@ -28,6 +28,10 @@ resource "kind_cluster" "foo" {
     node {
       role = "worker"
     }
+
+    node {
+      role = "worker"
+    }
   }
 }
 
