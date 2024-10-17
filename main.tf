@@ -20,9 +20,6 @@ resource "kind_cluster" "foo" {
 }
 
 # # for initial release in the cluster
-# TODO/NOTE: since my root app uses argocd I think installing the helm chart
-# right from here will create it all ok and I don't need this helm release of
-# argocd in the first place... need to update my note in the argocd repo
 resource "helm_release" "argocd" {
 
   depends_on = [kind_cluster.foo]
@@ -46,32 +43,6 @@ resource "helm_release" "argocd" {
     ignore_changes = all
   }
 }
-
-# TODO: instead of copying old patterns let's try to helm_release my argocd root app?
-# TODO: nevermind, I would need to build a helm chart unless I can do a helm release from a git repo
-# resource "helm_release" "argocd" {
-
-#   depends_on = [kind_cluster.foo]
-
-#   chart      = "argo-cd"
-#   name       = local.argocd_deployment_name
-#   repository = "https://argoproj.github.io/argo-helm"
-#   version    = "7.0.0"
-
-#   namespace        = local.argocd_namespace
-#   create_namespace = true
-
-#   values = [yamlencode(local.argocd_helm_values)]
-
-#   # set {
-#   #   name  = "server.service.type"
-#   #   value = "LoadBalancer"
-#   # }
-
-#   lifecycle {
-#     ignore_changes = all
-#   }
-# }
 
 # TODO: having problems using terraform to make the argocd app - but for homelab
 # I think I'll just use terraform to make a cluster with argocd and then use
