@@ -7,6 +7,18 @@ resource "kind_cluster" "foo" {
 
     node {
       role = "control-plane"
+      kubeadm_config_patches = [
+        "kind: InitConfiguration\nnodeRegistration:\n  kubeletExtraArgs:\n    node-labels: \"ingress-ready=true\"\n"
+      ]
+
+      extra_port_mappings {
+        container_port = 30000
+        host_port      = 80
+      }
+      extra_port_mappings {
+        container_port = 30001
+        host_port      = 443
+      }
     }
 
     node {
@@ -43,6 +55,25 @@ resource "helm_release" "argocd" {
     ignore_changes = all
   }
 }
+
+
+# TODO It'd be nice actually to use an argocd app as apart of the cluster setup
+# for this. helm release is fine but feels anti-patternish. but I want traefik
+# apart of the cluster setup, not my apps setup
+resource "helm_release" "traefik" {
+
+  depends_on = [kind_cluster.foo]
+
+  name       = "traefik"
+  chart      = "traefik"
+  repository = "https://traefik.github.io/charts"
+
+  namespace        = "traefik"
+  create_namespace = true
+
+  values = [yamlencode(local.traefik_helm_values)]
+}
+
 
 # TODO: having problems using terraform to make the argocd app - but for homelab
 # I think I'll just use terraform to make a cluster with argocd and then use
