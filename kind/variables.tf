@@ -14,7 +14,6 @@ variable "argocd_namespace" {
 }
 
 variable "traefik_external_ips" {
-  type = list(string)
-  # TODO: change to your host IP
-  default = ["192.168.1.143"]
+  type    = list(string)
+  default = []
 }
