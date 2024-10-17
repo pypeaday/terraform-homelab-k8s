@@ -1,43 +1,3 @@
-locals {
-  argocd_deployment_name = "argocd"
-  argocd_namespace       = "argocd"
-  cluster_name           = "foo-tf"
-  kubernetes_context     = "kind-${local.cluster_name}"
-  argocd_helm_values = {
-    global = {
-      domain = "localhost"
-      podLabels = {
-        testLabel = "baz"
-      }
-    }
-    configs = {
-      params = {
-        "server.insecure" = true
-      }
-    }
-  }
-
-}
-
-terraform {
-  required_providers {
-    kind = {
-      source  = "tehcyx/kind"
-      version = "~> 0.6.0"
-    }
-    argocd = {
-      source  = "argoproj-labs/argocd"
-      version = "7.0.0"
-    }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "2.16.0"
-    }
-  }
-}
-
-provider "kind" {}
-
 resource "kind_cluster" "foo" {
   wait_for_ready = false
   name           = local.cluster_name
@@ -56,17 +16,6 @@ resource "kind_cluster" "foo" {
     node {
       role = "worker"
     }
-  }
-}
-
-provider "kubernetes" {
-  config_path = "./${local.cluster_name}-config"
-}
-
-provider "helm" {
-  # Configuration options
-  kubernetes {
-    config_path = "./${local.cluster_name}-config"
   }
 }
 
@@ -122,32 +71,6 @@ resource "helm_release" "argocd" {
 #   lifecycle {
 #     ignore_changes = all
 #   }
-# }
-# TODO: cannot read this... something is not configured right with hitting the k8s api and I'm just not sure what it is
-# │ Error: Get "http://localhost/api/v1/namespaces/argocd/secrets/argocd-initial-admin-secret": dial tcp [::1]:80: connect: connection refused
-
-# data "kubernetes_secret" "argocd_admin" {
-
-#   metadata {
-#     name      = "argocd-initial-admin-secret"
-#     namespace = helm_release.argocd.namespace
-#   }
-
-# }
-
-# provider "argocd" {
-
-#   password = data.kubernetes_secret.argocd_admin.data["password"]
-#   username = "admin"
-
-#   # core = true
-
-#   # auth_token                  = data.kubernetes_secret.argocd_admin.data["password"]
-#   port_forward_with_namespace = local.argocd_namespace
-#   kubernetes {
-#     config_context = local.kubernetes_context
-#   }
-
 # }
 
 # TODO: having problems using terraform to make the argocd app - but for homelab
