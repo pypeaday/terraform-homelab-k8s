@@ -20,6 +20,12 @@ locals {
         key      = "node-role.kubernetes.io/master"
         operator = "Equal"
         effect   = "NoSchedule"
+      },
+      # for kind
+      {
+        key      = "node-role.kubernetes.io/control-plane"
+        operator = "Equal"
+        effect   = "NoSchedule"
       }
     ]
   }
