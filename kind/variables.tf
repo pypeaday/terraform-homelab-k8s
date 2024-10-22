@@ -1,3 +1,8 @@
+variable "argocd_password" {
+  type    = string
+  default = "admin"
+}
+
 variable "cluster_name" {
   type    = string
   default = "foo-tf"

@@ -41,6 +41,12 @@ locals {
       params = {
         "server.insecure" = true
       }
+      cmp = {
+        secret = {
+          argocdServerAdminPassword = bcrypt(var.argocd_password)
+        }
+      }
+    }
     }
   }
 
