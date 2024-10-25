@@ -1,0 +1,6 @@
+export KUBECONFIG=$HOME/projects/personal/terraform-homelab-k8s/foo-tf-config
+# If using Minio/S3 backend then set these
+export AWS_S3_ENDPOINT=http://<minio address>:<api port>
+export AWS_ENDPOINT_URL_S3=http://<minio address>:<api port>
+export AWS_ACCESS_KEY_ID=setme
+export AWS_SECRET_ACCESS_KEY=setmetoo
