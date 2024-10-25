@@ -4,6 +4,8 @@ Terraform repo to setup a local k8s cluster to homelab with
 
 K8s provider: `kind` or COMING SOON `k3s`
 
+Storage: `s3` backend via Minio (but just comment out the `backend` block in `providers.tf` if you want to use local state file)
+
 Includes ArgoCD as a helm release managed with terraform
 
 Head over to my [homelab-argocd](https://www.github.com/pypeaday/homelab-argocd) repo to see  my app of apps deployment!
@@ -29,8 +31,15 @@ data.kubernetes_secret.argocd_admin: Reading...
 
 ## Usage
 
+### Environment Variables for Secrets
+
+I use a `.envrc` that's comitted to the repo - edit for your lab
+
+### Commands
+
 ```bash
 terraform init
+
 terraform apply -auto-approve
 ```
 
