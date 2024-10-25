@@ -57,9 +57,9 @@ resource "helm_release" "argocd" {
 
   # NOTE: ignore all changes because helm won't manage the lifecycle of argocd,
   # the plan is for argocd to manage itself
-  lifecycle {
-    ignore_changes = all
-  }
+  # lifecycle {
+  #   ignore_changes = all
+  # }
 }
 
 

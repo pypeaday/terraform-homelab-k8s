@@ -1,3 +1,8 @@
+variable "domain" {
+  type    = string
+  default = "paynepride.com"
+}
+
 variable "argocd_password" {
   type    = string
   default = "admin"
