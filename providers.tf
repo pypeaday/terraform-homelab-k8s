@@ -18,7 +18,7 @@ terraform {
       s3 = "http://192.168.1.9:9004" # Minio endpoint
     }
     # NOTE: check readme for terraform init information
-    bucket = "homelab-terraform-state"
+    bucket = "terraform-homelab-k8s"
     key    = "terraform.state"
     region = "main"
 
