@@ -10,7 +10,7 @@ variable "argocd_password" {
 
 variable "cluster_name" {
   type    = string
-  default = "foo-tf"
+  default = "kestra-tf"
 }
 
 variable "argocd_deployment_name" {
