@@ -10,14 +10,41 @@ resource "kind_cluster" "foo" {
       kubeadm_config_patches = [
         "kind: InitConfiguration\nnodeRegistration:\n  kubeletExtraArgs:\n    node-labels: \"ingress-ready=true\"\n"
       ]
-
+      #  extra_port_mappings {
+      #     container_port = 30000
+      #     host_port      = 80
+      #   }
+      #   extra_port_mappings {
+      #     container_port = 30001
+      #     host_port      = 443
+      #   }
       extra_port_mappings {
-        container_port = 30000
-        host_port      = 80
+        container_port = 32080
+        host_port      = 8080
       }
       extra_port_mappings {
-        container_port = 30001
-        host_port      = 443
+        container_port = 32443
+        host_port      = 8443
+      }
+      extra_port_mappings {
+        container_port = 32090
+        host_port      = 9000
+      }
+      extra_port_mappings {
+        container_port = 30081
+        host_port      = 8081
+      }
+      extra_port_mappings {
+        container_port = 30082
+        host_port      = 8082
+      }
+      extra_port_mappings {
+        container_port = 32091
+        host_port      = 9042
+      }
+      extra_port_mappings {
+        container_port = 32092
+        host_port      = 9142
       }
     }
 
@@ -74,7 +101,7 @@ resource "helm_release" "traefik" {
   chart      = "traefik"
   repository = "https://traefik.github.io/charts"
 
-  namespace        = "traefik"
+  namespace        = var.traefik_namespace
   create_namespace = true
 
   values = [yamlencode(local.traefik_helm_values)]

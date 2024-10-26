@@ -23,6 +23,11 @@ variable "argocd_namespace" {
   default = "argocd"
 }
 
+variable "traefik_namespace" {
+  type    = string
+  default = "traefik"
+}
+
 variable "traefik_external_ips" {
   type    = list(string)
   default = []

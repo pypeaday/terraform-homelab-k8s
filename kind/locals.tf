@@ -1,20 +1,28 @@
 locals {
   kubernetes_context = "kind-${var.cluster_name}"
   traefik_helm_values = {
+    providers = {
+      kubernetesCRD = {
+        namespaces = [var.traefik_namespace, "default"]
+      }
+      kubernetesIngress = {
+        namespaces = [var.traefik_namespace, "default"]
+      }
+    }
     service = {
-      # type = "NodePort"
-      externalIPs = var.traefik_external_ips
+      type = "NodePort"
+      # externalIPs = var.traefik_external_ips
     }
     ports = {
+      traefik = {
+        expose   = true
+        nodePort = 32090
+      }
       web = {
-        nodePort = 30000
-        # port       = 80
-        # targetPort = 80
+        nodePort = 32080
       }
       websecure = {
-        nodePort = 30001
-        # port       = 443
-        # targetPort = 443
+        nodePort = 32443
       }
     }
     # additionalArguments = [
