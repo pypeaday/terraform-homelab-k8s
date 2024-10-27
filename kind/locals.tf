@@ -3,10 +3,12 @@ locals {
   traefik_helm_values = {
     providers = {
       kubernetesCRD = {
-        namespaces = [var.traefik_namespace, "default"]
+        namespaces   = [var.traefik_namespace, "default"]
+        ingressClass = "traefik"
       }
       kubernetesIngress = {
-        namespaces = [var.traefik_namespace, "default"]
+        namespaces   = [var.traefik_namespace, "default"]
+        ingressClass = "traefik"
       }
     }
     service = {
@@ -15,7 +17,7 @@ locals {
     }
     ports = {
       traefik = {
-        expose   = true
+        # expose   = true
         nodePort = 32090
       }
       web = {

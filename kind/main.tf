@@ -10,41 +10,17 @@ resource "kind_cluster" "foo" {
       kubeadm_config_patches = [
         "kind: InitConfiguration\nnodeRegistration:\n  kubeletExtraArgs:\n    node-labels: \"ingress-ready=true\"\n"
       ]
-      #  extra_port_mappings {
-      #     container_port = 30000
-      #     host_port      = 80
-      #   }
-      #   extra_port_mappings {
-      #     container_port = 30001
-      #     host_port      = 443
-      #   }
       extra_port_mappings {
         container_port = 32080
-        host_port      = 8080
+        host_port      = 9080
       }
       extra_port_mappings {
         container_port = 32443
-        host_port      = 8443
+        host_port      = 9443
       }
       extra_port_mappings {
         container_port = 32090
-        host_port      = 9000
-      }
-      extra_port_mappings {
-        container_port = 30081
-        host_port      = 8081
-      }
-      extra_port_mappings {
-        container_port = 30082
-        host_port      = 8082
-      }
-      extra_port_mappings {
-        container_port = 32091
-        host_port      = 9042
-      }
-      extra_port_mappings {
-        container_port = 32092
-        host_port      = 9142
+        host_port      = 9090
       }
     }
 
@@ -84,9 +60,9 @@ resource "helm_release" "argocd" {
 
   # NOTE: ignore all changes because helm won't manage the lifecycle of argocd,
   # the plan is for argocd to manage itself
-  # lifecycle {
-  #   ignore_changes = all
-  # }
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 
