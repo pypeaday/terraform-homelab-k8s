@@ -65,25 +65,6 @@ resource "helm_release" "argocd" {
   }
 }
 
-
-# TODO It'd be nice actually to use an argocd app as apart of the cluster setup
-# for this. helm release is fine but feels anti-patternish. but I want traefik
-# apart of the cluster setup, not my apps setup
-resource "helm_release" "traefik" {
-
-  depends_on = [kind_cluster.foo]
-
-  name       = "traefik"
-  chart      = "traefik"
-  repository = "https://traefik.github.io/charts"
-
-  namespace        = var.traefik_namespace
-  create_namespace = true
-
-  values = [yamlencode(local.traefik_helm_values)]
-}
-
-
 # TODO: having problems using terraform to make the argocd app - but for homelab
 # I think I'll just use terraform to make a cluster with argocd and then use
 # helm charts and a repo for argocd apps
