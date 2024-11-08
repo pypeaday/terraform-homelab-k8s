@@ -1,6 +1,6 @@
 variable "domain" {
   type    = string
-  default = "paynepride.com"
+  default = "k8s.paynepride.com"
 }
 
 variable "argocd_password" {

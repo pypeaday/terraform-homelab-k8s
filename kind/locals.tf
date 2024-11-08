@@ -3,15 +3,16 @@ locals {
   traefik_helm_values = {
     providers = {
       kubernetesCRD = {
-        namespaces   = [var.traefik_namespace, "default"]
+        namespaces   = [var.traefik_namespace, "default", "all"]
         ingressClass = "traefik"
       }
       kubernetesIngress = {
-        namespaces   = [var.traefik_namespace, "default"]
+        namespaces   = [var.traefik_namespace, "default", "all"]
         ingressClass = "traefik"
       }
     }
     service = {
+      # type = "LoadBalancer"
       type = "NodePort"
       # externalIPs = var.traefik_external_ips
     }
@@ -50,7 +51,7 @@ locals {
   }
   argocd_helm_values = {
     global = {
-      domain = "localhost"
+      domain = var.domain
       podLabels = {
         testLabel = "baz"
       }
@@ -75,13 +76,13 @@ locals {
         ingressClassName = "traefik"
         extraHosts = [
           {
-            name = "argocd.k8s.${var.domain}"
+            name = "argocd.${var.domain}"
             path = "/"
           }
         ]
         extraRules = [
           {
-            host = "argocd.k8s.${var.domain}"
+            host = "argocd.${var.domain}"
             http = {
               paths = [
                 {

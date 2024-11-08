@@ -60,9 +60,10 @@ resource "helm_release" "argocd" {
 
   # NOTE: ignore all changes because helm won't manage the lifecycle of argocd,
   # the plan is for argocd to manage itself
-  lifecycle {
-    ignore_changes = all
-  }
+  # TODO: ignore once I have the config good enough
+  # lifecycle {
+  #   ignore_changes = all
+  # }
 }
 
 # TODO: having problems using terraform to make the argocd app - but for homelab
